@@ -1,41 +1,79 @@
+import "./styles";
+
 import * as PIXI from "pixi.js";
 
-const app = new PIXI.Application({ width: 640, height: 360 });
+import { EventBus, State, registerKeyboard } from "./services";
+
+import { Topic } from "./services/event/types";
+import { selectCamera } from "./services/state/selectors";
+
+const height = document.body.offsetHeight;
+const width = document.body.offsetWidth;
+
+const eventBus = new EventBus();
+const state = new State({ camera: { x: 0, y: 0 }, objects: [] });
+
+const app = new PIXI.Application({ width, height });
 document.body.appendChild(app.view);
 
 const frame = new PIXI.Graphics();
 frame.beginFill(0x666666);
-frame.lineStyle({ color: 0xffffff, width: 4, alignment: 0 });
-frame.drawRect(0, 0, 208, 208);
-frame.position.set(320 - 100, 180 - 100);
+frame.endFill();
 app.stage.addChild(frame);
 
-const mask = new PIXI.Graphics();
-mask.beginFill(0xffffff);
-mask.drawRect(0, 0, 200, 200);
-mask.endFill();
+registerKeyboard(eventBus);
 
-const maskContainer = new PIXI.Container();
-maskContainer.mask = mask;
-maskContainer.addChild(mask);
-maskContainer.position.set(4, 4);
-frame.addChild(maskContainer);
+eventBus.subscribe(Topic.Up, () => {
+  state.newState((state) => {
+    const camera = selectCamera(state);
 
-const text = new PIXI.Text(
-  "This text will scroll up and be masked, so you can see how masking works.  Lorem ipsum and all that.\n\n" +
-    "You can put anything in the container and it will be masked!",
-  {
-    fontSize: 24,
-    fill: 0x1010ff,
-    wordWrap: true,
-    wordWrapWidth: 180,
-  }
-);
-text.x = 10;
-maskContainer.addChild(text);
+    const newCamera = { ...camera, y: camera.y - 10 };
 
-let elapsed = 0.0;
-app.ticker.add((delta) => {
-  elapsed += delta;
-  text.y = 10 + -100.0 + Math.cos(elapsed / 50.0) * 100.0;
+    return { ...state, camera: newCamera };
+  });
+});
+
+eventBus.subscribe(Topic.Down, () => {
+  state.newState((state) => {
+    const camera = selectCamera(state);
+
+    const newCamera = { ...camera, y: camera.y + 10 };
+
+    return { ...state, camera: newCamera };
+  });
+});
+
+eventBus.subscribe(Topic.Left, () => {
+  state.newState((state) => {
+    const camera = selectCamera(state);
+
+    const newCamera = { ...camera, x: camera.x - 10 };
+
+    return { ...state, camera: newCamera };
+  });
+});
+
+eventBus.subscribe(Topic.Right, () => {
+  state.newState((state) => {
+    const camera = selectCamera(state);
+
+    const newCamera = { ...camera, x: camera.x + 10 };
+
+    return { ...state, camera: newCamera };
+  });
+});
+
+const rect = new PIXI.Graphics();
+
+rect.beginFill(0x666666);
+rect.drawRect(0, 0, 50, 50);
+rect.endFill();
+
+frame.addChild(rect);
+
+app.ticker.add(() => {
+  const { x, y } = selectCamera(state.getState());
+  rect.position.x = x;
+  rect.position.y = y;
+  // console.log(x, y);
 });
