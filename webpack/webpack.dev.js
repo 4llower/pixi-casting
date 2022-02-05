@@ -27,7 +27,7 @@ module.exports = {
           "sass-loader",
         ],
       },
-    ]
+    ],
   },
 
   plugins: [
@@ -39,7 +39,11 @@ module.exports = {
 
   resolve: {
     extensions: [".ts", ".js"],
-    modules: ['node_modules'],
+    modules: ["node_modules"],
+    alias: {
+      "@": [path.resolve(__dirname, "src/")],
+      "@services": [path.resolve(__dirname, "src/services/")],
+    },
   },
 
   output: {

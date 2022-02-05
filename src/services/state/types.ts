@@ -1,14 +1,20 @@
-export interface ICamera {
-  x: number;
-  y: number;
+import { IPoint } from "@services/types";
+export interface IView {
+  xAngle: number;
+  yAngle: number;
 }
 
-export interface IObject {
+export interface ICamera {
+  position: IPoint;
+  view: IView;
+}
+
+export interface ISubject {
   x: number;
   y: number;
 }
 
 export interface IState {
   camera: ICamera;
-  objects: IObject[];
+  subjects: ISubject[];
 }

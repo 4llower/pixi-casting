@@ -1,6 +1,6 @@
 import { IEventBus, Topic } from "./event";
 
-export const registerKeyboard = (bus: IEventBus) => {
+export const registerKeyboardEvents = (bus: IEventBus) => {
   document.addEventListener("keydown", (event) => {
     switch (event.key) {
       case "w":
