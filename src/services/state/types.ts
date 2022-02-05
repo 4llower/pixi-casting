@@ -1,4 +1,4 @@
-import { IPoint } from "@services/types";
+import { IPoint } from "@/services/types";
 export interface IView {
   xAngle: number;
   yAngle: number;

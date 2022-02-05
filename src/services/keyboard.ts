@@ -1,6 +1,8 @@
+import { useContext } from "./context";
 import { IEventBus, Topic } from "./event";
 
-export const registerKeyboardEvents = (bus: IEventBus) => {
+export const registerKeyboardEvents = () => {
+  const bus = useContext<IEventBus>("Events");
   document.addEventListener("keydown", (event) => {
     switch (event.key) {
       case "w":

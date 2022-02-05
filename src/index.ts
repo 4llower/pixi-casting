@@ -8,7 +8,9 @@ import {
   registerKeyboardEvents,
   selectCamera,
   registerCameraEvents,
-} from "./services";
+  createContext,
+  useContext,
+} from "@/services";
 
 const height = document.body.offsetHeight;
 const width = document.body.offsetWidth;
@@ -16,13 +18,13 @@ const width = document.body.offsetWidth;
 const camera = {
   position: { x: 0, y: 0, z: 0 },
   view: {
-    xAngle: 0,
-    yAngle: 0,
+    xAngle: 90,
+    yAngle: 180,
   },
 };
 
-const eventBus = new EventBus();
-const state = new State({ camera, subjects: [] });
+createContext<EventBus>(new EventBus(), "Events");
+createContext<State>(new State({ camera, subjects: [] }), "State");
 
 const app = new PIXI.Application({ width, height });
 document.body.appendChild(app.view);
@@ -32,8 +34,8 @@ frame.beginFill(0x666666);
 frame.endFill();
 app.stage.addChild(frame);
 
-registerKeyboardEvents(eventBus);
-registerCameraEvents(state, eventBus);
+registerKeyboardEvents();
+registerCameraEvents();
 
 const rect = new PIXI.Graphics();
 
@@ -44,6 +46,7 @@ rect.endFill();
 frame.addChild(rect);
 
 app.ticker.add(() => {
+  const state = useContext<State>("State");
   const {
     position: { x, y },
   } = selectCamera(state.getState());

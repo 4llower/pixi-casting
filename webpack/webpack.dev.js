@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 const cwd = (relativePath) => path.resolve(process.cwd(), relativePath);
 
@@ -35,14 +36,14 @@ module.exports = {
       filename: "index.html",
       template: cwd("./public/index.ejs"),
     }),
+    new TsconfigPathsPlugin(),
   ],
 
   resolve: {
     extensions: [".ts", ".js"],
     modules: ["node_modules"],
     alias: {
-      "@": [path.resolve(__dirname, "src/")],
-      "@services": [path.resolve(__dirname, "src/services/")],
+      "@": [cwd("./src")],
     },
   },
 
