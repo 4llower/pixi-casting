@@ -3,19 +3,19 @@ import { ICamera } from "@/services/state";
 import { IPoint } from "@/services/types";
 import { IRay } from "./types";
 
-const raysDensity = 1000;
-const rayLength = 100;
+const raysDensity = 1024;
+const rayLength = 1000;
 const viewDeg = 110;
 
-export const generateRaysFromCameraPosition = ({
-  position,
-  view,
-}: ICamera): IRay[] => {
+export const generateRaysFromCameraPosition = (
+  { position, view }: ICamera,
+  density = raysDensity
+): IRay[] => {
   const { x, y } = position;
   const rays: IRay[] = [];
 
-  for (let i = 0; i < raysDensity; i++) {
-    const half = 90 * (i / raysDensity);
+  for (let i = 0; i < density; i++) {
+    const half = viewDeg * (i / density);
     const rotated = rotate2D(x, y, x, y + rayLength, view.xAngle - half);
     rays.push({ start: position, end: rotated });
   }

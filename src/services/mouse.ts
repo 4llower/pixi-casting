@@ -7,7 +7,7 @@ export const registerMouseEvents = (
 ) => {
   const bus = useContext<IEventBus>("Events");
   document.addEventListener("mousemove", (event) => {
-    const perX = event.clientX / windowWidth;
+    const perX = 1 - event.clientX / windowWidth;
     const perY = event.clientY / windowHeight;
 
     bus.publish(Topic.MouseChange, { xAngle: perX * 360, yAngle: perY * 180 });

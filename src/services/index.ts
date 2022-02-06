@@ -5,3 +5,4 @@ export * from "./camera";
 export * from "./context";
 export * from "./geometry";
 export * from "./mouse";
+export * from "./rays";

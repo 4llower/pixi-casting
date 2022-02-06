@@ -10,8 +10,10 @@ export interface ICamera {
 }
 
 export interface ISubject {
-  x: number;
-  y: number;
+  position: IPoint;
+  width: number;
+  height: number;
+  length: number;
 }
 
 export interface IState {
