@@ -24,7 +24,7 @@ export const getCollisionCF = (ray: IRay, subject: ISubject): number => {
     const yy = y1 + dy * t;
     const zz = z1 + dz * t;
     if (isPointInsideSubject({ x: xx, y: yy, z: zz }, subject)) {
-      return 1 - t;
+      return Math.pow(1 - t, 20);
     }
   }
 

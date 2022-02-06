@@ -1,3 +1,4 @@
+import { colorByBrightness } from "./services/geometry";
 import "./styles";
 
 import * as PIXI from "pixi.js";
@@ -60,7 +61,7 @@ app.ticker.add(() => {
   const rays = generateRaysFromCameraPosition(camera, 1707);
 
   rect
-    .beginFill(0x1231fa)
+    .beginFill(0x1231fa, 0.5)
     .drawRect(
       subject.position.x / 10,
       subject.position.y / 10,
@@ -72,23 +73,26 @@ app.ticker.add(() => {
   for (let i = 0; i < rays.length; ++i) {
     const ray = rays[i];
 
+    const percent = getCollisionCF(ray, subject) * 100;
+
     rect
       .lineStyle({
-        color: 0xfffff,
+        color: colorByBrightness("#FFFFFF", percent),
         alpha: getCollisionCF(ray, subject),
         width: 1,
       })
-      .drawRect(i, 0, 1, windowHeight);
+      .drawRect(windowWidth - i, 0, 1, windowHeight);
 
     const points: PIXI.Point[] = [
       { x: ray.start.x / 10, y: ray.start.y / 10 } as PIXI.Point,
       { x: ray.end.x / 10, y: ray.end.y / 10 } as PIXI.Point,
     ];
 
-    rect
-      .lineStyle({ color: 0xfffff, width: 5 })
-      .beginFill(0xffffff)
-      .drawPolygon(points)
-      .endFill();
+    if (i % 20 == 0)
+      rect
+        .lineStyle({ color: 0xfffff, width: 1, alpha: 0.5 })
+        .beginFill(0xfffff, 0.5)
+        .drawPolygon(points)
+        .endFill();
   }
 });
